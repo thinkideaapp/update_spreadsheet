@@ -1,0 +1,41 @@
+# Compilados de Python
+__pycache__/
+*.py[cod]
+
+# IDEs e editores de texto
+.idea/
+*.sublime*
+*.vscode/
+
+# Arquivos temporários e cache
+*.log
+*.tmp
+*.swp
+*.swo
+*.DS_Store
+
+# Ambientes virtuais
+venv/
+env/
+.virtualenvs/
+
+# Arquivos de pacotes Python
+*.egg-info/
+*.egg
+
+# Arquivos de testes
+.pytest_cache/
+nosetests.xml
+
+# Arquivos de configuração locais
+*.ini
+
+# Caches e arquivos de cache
+.cache/
+__pypackages__/
+
+# Arquivos de projeto específicos
+my_project/
+dist/
+build/
+*.egg-info/
