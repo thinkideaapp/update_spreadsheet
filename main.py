@@ -12,9 +12,9 @@ class MyHandler(FileSystemEventHandler):
         # Verifica se o arquivo é um PDF
         if event.src_path.endswith('.pdf'):
             print(f'Arquivo PDF detectado: {event.src_path}')
-            price, date, date_interval = self.read_pdf(event.src_path)
+            bill_dict = self.read_pdf(event.src_path)
             sheet_path = "planilha.xlsx"
-            insert_sheet(sheet_path, price, date, date_interval)
+            insert_sheet(sheet_path, bill_dict)
 
     def read_pdf(self, file_path):
         time.sleep(1)
@@ -23,23 +23,20 @@ class MyHandler(FileSystemEventHandler):
                 reader = PyPDF2.PdfReader(file)
                 print(f'Número de páginas: {len(reader.pages)}')
 
-                price = None
-                date = None
-
                 for page in reader.pages:
                     text = page.extract_text()
-                    text = pdf_text(text)
-
-                    price, date, date_interval = find_values(text)
-                    if price and date:
+                    # text = pdf_text(text)
+                    bill_dict = find_values(text)
+                    if bill_dict:
                         break
 
-                return price, format_date(date), date_interval
+                return bill_dict
         except Exception as e:
             print(f"Não foi possível ler o arquivo {file_path}: {e}")
 
 
 def main():
+    print("Monitorando a pasta...")
     path = '.'  # Define o caminho da pasta a ser monitorada
     event_handler = MyHandler()
     observer = Observer()
