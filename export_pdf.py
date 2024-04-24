@@ -19,20 +19,6 @@ def format_date(date):
     return formatted_date
 
 
-def pdf_text(text):
-    inicio = text.find("R$")
-
-    if inicio == -1:
-        return None
-
-    fim = text.find("\n", inicio)
-
-    if fim != -1:
-        return text[inicio:fim]
-    else:
-        return text[inicio:]
-
-
 def get_info_rows(get_rows, text, get_type, bill_group='A'):
     if bill_group == 'A':
         text_init = "ENERGIA ATIVA FORNECIDA FP kWh"
