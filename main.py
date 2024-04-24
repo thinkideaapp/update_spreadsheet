@@ -1,3 +1,4 @@
+import os
 import time
 
 import PyPDF2
@@ -15,6 +16,9 @@ class MyHandler(FileSystemEventHandler):
             bill_dict = self.read_pdf(event.src_path)
             sheet_path = "planilha.xlsx"
             insert_sheet(sheet_path, bill_dict)
+            os.remove(event.src_path)
+            print(f'Arquivo {event.src_path} removido')
+            print('Monitorando a pasta...')
 
     def read_pdf(self, file_path):
         time.sleep(1)
