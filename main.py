@@ -9,13 +9,13 @@ from export_pdf import find_values, insert_sheet
 
 
 sheet_path = "planilha.xlsx"
-ucs_sheet_path = "ucs.xlsx"
+ucs_sheet_path = "ucs_gerados.xlsx"
 
 
 class MyHandler(FileSystemEventHandler):
     def on_created(self, event):
         # Verifica se o arquivo é um PDF
-        if event.src_path.endswith('.pdf'):
+        if event.src_path.endswith('.pdf') or event.src_path.endswith('.PDF'):
             bill_dict = self.read_pdf(event.src_path)
             print(f'Arquivo PDF detectado: {event.src_path}')
             insert_sheet(sheet_path, bill_dict)

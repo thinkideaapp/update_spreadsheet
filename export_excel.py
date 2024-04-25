@@ -76,7 +76,7 @@ def get_xlsx_uc(planilha1, planilha2, bill_dict):
     if last_row:
         # Se encontrar, insere os valores de G, H e I
         ws.cell(row=last_row, column=column_index_from_string(
-            "AD")).value = last_row_dict['G'] + 1
+            "AD")).value = last_row_dict['G']
         ws.cell(row=last_row, column=column_index_from_string(
             "AE")).value = last_row_dict['H']
         ws.cell(row=last_row, column=column_index_from_string(

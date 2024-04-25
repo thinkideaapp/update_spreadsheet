@@ -19,34 +19,84 @@ def format_date(date):
     return formatted_date
 
 
-def search_text_sum(text):
-    sums_dict = {
-        "sum_ac": True,
-        "sum_ab": True,
-        "sum_z": True,
-        "sum_z_b": True,
-    }
+def get_rows_columns(info_dict, bill_group, get_type):
+    new_dict = {}
+    if bill_group == "A":
+        if get_type == "quantity":
+            try:
+                new_dict = {
+                    "AO": info_dict.get("ENERGIA ATIVA FORNECIDA FP", 0),
+                    "AP": info_dict.get("ENERGIA ATIVA FORNECIDA HR", 0),
+                    "AN": info_dict.get("ENERGIA ATIVA FORNECIDA P", 0),
+                    "AX": info_dict.get("ENERGIA INJETADA FP", 0),
+                    "AY": info_dict.get("ENERGIA INJETADA HR", 0),
+                    "AW": info_dict.get("ENERGIA INJETADA P", 0),
+                }
+            except:
+                pass
+        elif get_type == "unit_price":
+            try:
+                new_dict = {
+                    "AC": info_dict.get("ENERGIA ATIVA FORNECIDA FP", 0) + info_dict.get("ENERGIA ATIVA FORNECIDA FP -", 0),
+                    "AB": info_dict.get("ENERGIA ATIVA FORNECIDA P", 0) + info_dict.get("ENERGIA ATIVA FORNECIDA P -", 0),
+                }
+            except:
+                pass
+        elif get_type == "prices":
+            try:
+                new_dict = {
+                    "Q": info_dict.get("DEMANDA", 0),
+                    "S": info_dict.get("UFER FP", 0),
+                    "U": info_dict.get("CONTRIB. ILUM. PÚBLICA", 0),
+                    "Z": info_dict.get("DEMANDA ULTRAPASSAGEM", 0) + info_dict.get("INDEN. VIOL. PRAZO ATENDIMENTO", 0),
+                }
+            except:
+                pass
+        elif get_type == "kwh_consumed":
+            try:
+                new_dict = {
+                    "AT": info_dict.get("ENERGIA GERAÇÃO 1", 0),
+                    "AS": info_dict.get("ENERGIA GERAÇÃO 2", 0),
+                    "AU": info_dict.get("ENERGIA GERAÇÃO 3", 0),
+                }
+            except:
+                pass
+    else:
+        if get_type == "quantity":
+            try:
+                new_dict = {
+                    "AO": info_dict.get("ENERGIA ATIVA FORNECIDA", 0),
+                    "AX": info_dict.get("ENERGIA INJETADA", 0),
+                }
+            except:
+                pass
+        if get_type == "unit_price":
+            try:
+                new_dict = {
+                    "AB": info_dict.get("ENERGIA ATIVA FORNECIDA", 0),
+                    "AC": info_dict.get("ENERGIA ATIVA FORNECIDA", 0),
+                }
+            except:
+                pass
+        if get_type == "prices":
+            try:
+                new_dict = {
+                    "U": info_dict.get("CONTRIB. ILUM. PÚBLICA", 0),
+                    "Z": info_dict.get("JUROS MORATÓRIA", 0) + info_dict.get("MULTA", 0),
+                }
+            except:
+                pass
+        elif get_type == "kwh_consumed":
+            try:
+                new_dict = {
+                    "AT": info_dict.get("ENERGIA GERAÇÃO 1", 0),
+                }
+            except:
+                pass
+    return new_dict
 
-    text_find1 = text.find("ENERGIA ATIVA FORNECIDA FP")
-    text_find2 = text.find("ENERGIA ATIVA FORNECIDA FP -")
-    if text_find1 == -1 and text_find2 == -1:
-        sums_dict["sum_ac"] = False
-    text_find1 = text.find("ENERGIA ATIVA FORNECIDA P")
-    text_find2 = text.find("ENERGIA ATIVA FORNECIDA P -")
-    if text_find1 == -1 and text_find2 == -1:
-        sums_dict["sum_ab"] = False
-    text_find1 = text.find("DEMANDA ULTRAPASSAGEM")
-    text_find2 = text.find("INDEN. VIOL. PRAZO ATENDIMENTO")
-    if text_find1 == -1 and text_find2 == -1:
-        sums_dict["sum_z"] = False
-    text_find1 = text.find("JUROS MORATÓRIA")
-    text_find2 = text.find("MULTA -")
-    if text_find1 == -1 and text_find2 == -1:
-        sums_dict["sum_z_b"] = False
-    return sums_dict
 
-
-def get_info_rows(text, get_type):
+def get_info_rows(text, get_type, bill_group):
     text_init = "ENERGIA ATIVA FORNECIDA"
     text_end = "DEMANDA - kW"
     if get_type == "kwh_consumed":
@@ -79,17 +129,41 @@ def get_info_rows(text, get_type):
     ]
     kwh_rows = rows[:3]
 
+    if bill_group == "B":
+        quantity_rows = [
+            "ENERGIA ATIVA FORNECIDA",
+            "ENERGIA INJETADA",
+        ]
+        unit_prices_rows = [
+            "ENERGIA ATIVA FORNECIDA",
+        ]
+        prices_rows = [
+            "CONTRIB. ILUM. PÚBLICA",
+            "JUROS MORATÓRIA",
+            "MULTA",
+        ]
+        kwh_rows = rows[:1]
+
     row_list = []
     value = None
+    info_dict = {}  # Inicializa o dicionário
+    kwh_num = 1
     for i, row in enumerate(rows, start=1):
         if get_type == "quantity":
             if row.split(' kWh')[0] in quantity_rows:
-                if len(row.split(' kWh')[0].split(" ")) == 4:
-                    value = row.split(' ')[6]
+                if bill_group == "A":
+                    if len(row.split(' kWh')[0].split(" ")) == 4:
+                        value = row.split(' ')[6]
+                    else:
+                        value = row.split(' ')[5]
                 else:
-                    value = row.split(' ')[5]
+                    if len(row.split(' kWh')[0].split(" ")) == 3:
+                        value = row.split(' ')[5]
+                    else:
+                        value = row.split(' ')[4]
                 if value:
                     row_list.append(value)
+                    info_dict[row.split(' kWh')[0]] = value
                     quantity_rows.remove(row.split(' kWh')[0])
             elif row.split(' -')[0] in quantity_rows:
                 if len(row.split(' -')[0].split(" ")) == 4:
@@ -97,20 +171,35 @@ def get_info_rows(text, get_type):
                 else:
                     value = row.split(' ')[7]
                 row_list.append(value)
+                info_dict[row.split(' -')[0]] = value
                 quantity_rows.remove(row.split(' -')[0])
         elif get_type == "unit_price":
             if row.split(' kWh')[0] in unit_prices_rows:
-                if len(row.split(' kWh')[0].split(" ")) == 4:
-                    value = row.split(' ')[5]
+                if bill_group == "A":
+                    if len(row.split(' kWh')[0].split(" ")) == 4:
+                        value = row.split(' ')[5]
+                        row_list.append(value)
+                    else:
+                        value = row.split(' ')[8]
+                        row_list.append(value)
                 else:
-                    value = row.split(' ')[8]
-                row_list.append(value)
-            if row.split(' -')[0] in unit_prices_rows:
-                if len(row.split(' kWh')[0].split(" ")) == 6:
-                    value = row.split(' ')[7]
+                    if len(row.split(' kWh')[0].split(" ")) == 3:
+                        value = row.split(' ')[4]
+                        row_list.append(value)
+                info_dict[row.split(' kWh')[0]] = value
+            if row.replace('-', '--').split('- ')[0] in unit_prices_rows:
+                if bill_group == "A":
+                    if len(row.split(' kWh')[0].split(" ")) == 6:
+                        value = row.split(' ')[7]
+                        row_list.append(value)
+                    else:
+                        value = row.split(' ')[8]
+                        row_list.append(value)
                 else:
-                    value = row.split(' ')[8]
-                row_list.append(value)
+                    if len(row.split(' kWh')[0].split(" ")) == 5:
+                        value = row.split(' ')[6]
+                        row_list.append(value)
+                info_dict[row.replace('-', '--').split('- ')[0]] = value
         elif get_type == "prices":
             if row.split(' kW')[0] in prices_rows:
                 if len(row.split(' kW')[0].split(" ")) == 1:
@@ -118,25 +207,43 @@ def get_info_rows(text, get_type):
                 else:
                     value = row.split(' ')[6]
                 row_list.append(value)
+                info_dict[row.split(' kW')[0]] = value
                 prices_rows.remove(row.split(' kW')[0])
                 continue
             if row.split(' kVArh')[0] == "UFER FP":
                 value = row.split(' ')[-1]
                 row_list.append(value)
+                info_dict[row.split(' kVArh')[0]] = value
                 continue
             if row.split(' -')[0] == prices_rows[-1]:
-                value = row.split(' ')[-1]
+                if bill_group == "A":
+                    value = row.split(' ')[-1]
+                else:
+                    value = re.sub("[a-zA-Z]", "", row.split(" ")[4])
                 row_list.append(value)
+                info_dict[row.split(' -')[0]] = value
                 prices_rows.remove(row.split(' -')[0])
             if row.split(' -')[0] in prices_rows:
                 value = re.sub("[a-zA-Z]", "", row.split(" ")[-2])
                 row_list.append(value)
+                info_dict[row.split(' -')[0]] = value
                 prices_rows.remove(row.split(' -')[0])
+            if row.split('.')[0] in prices_rows:
+                value = row.split(' ')[-1]
+                row_list.append(value)
+                info_dict[row.split(' .')[0]] = value
         elif get_type == "kwh_consumed":
             if row in kwh_rows:
                 value = row.split(' ')[5]
                 row_list.append(value)
-    return row_list
+                info_dict[f"ENERGIA GERAÇÃO {kwh_num}"] = value
+                kwh_num += 1
+
+    for chave, valor in info_dict.items():
+        info_dict[chave] = float(valor.replace('.', '').replace(',', '.'))
+
+    info_dict = get_rows_columns(info_dict, bill_group, get_type)
+    return info_dict
 
 
 def bill_classification(text):
@@ -154,28 +261,13 @@ def bill_classification(text):
         return None
 
 
-def sum_values(unit_prices, prices, bill_group, sums_dict):
-    if bill_group == "A":
-        if sums_dict["sum_ac"]:
-            unit_prices[0] = unit_prices[0]+unit_prices[2]
-        if sums_dict["sum_ab"]:
-            unit_prices[1] = unit_prices[1]+unit_prices[3]
-        if sums_dict["sum_z"]:
-            prices[1] = prices[1]+prices[-1]
-    else:
-        unit_prices = unit_prices
-        if sums_dict["sum_z_b"]:
-            prices[1] = prices[1]+prices[-1]
-    return unit_prices, prices
-
-
 def find_values(text):
     bill_group = bill_classification(text)
     # Definindo padrões de expressões regulares para o valor e a data
-    quantity = get_info_rows(text, "quantity")
-    unit_prices = get_info_rows(text, "unit_price")
-    prices = get_info_rows(text, "prices")
-    kwh_consumed = get_info_rows(text, "kwh_consumed")
+    quantity = get_info_rows(text, "quantity", bill_group)
+    unit_prices = get_info_rows(text, "unit_price", bill_group)
+    prices = get_info_rows(text, "prices", bill_group)
+    kwh_consumed = get_info_rows(text, "kwh_consumed", bill_group)
 
     price_default = r'R\$.*?(\d{1,3}(?:\.\d{3})*,\d{2})'
     date_default = r'(\d{2}/\d{2}/\d{4})'
@@ -198,23 +290,7 @@ def find_values(text):
     if match_uc:
         uc = match_uc.group(1)
 
-    unit_prices = [number.replace('.', '').replace(',', '.')
-                   for number in unit_prices]
-    unit_prices = [float(number) for number in unit_prices]
-
-    prices = [number.replace('.', '').replace(',', '.') for number in prices]
-    prices = [float(number) for number in prices]
-
-    quantity = [number.replace('.', '').replace(',', '.')
-                for number in quantity]
-    quantity = [float(number) for number in quantity]
-    kwh_consumed = [number.replace('.', '').replace(',', '.')
-                    for number in kwh_consumed]
-    kwh_consumed = [float(number) for number in kwh_consumed]
     price = str(price).replace('.', '').replace(',', '.')
-
-    sums_dict = search_text_sum(text)
-    unit_prices, prices = sum_values(unit_prices, prices, bill_group, sums_dict)
 
     bill_dict = {
         'bill_group': bill_group,
@@ -255,120 +331,122 @@ def organize_sheet_columns(sheet, max_row, bill_dict):
     center_cell.font = font_trebuchet_ms
 
     if bill_dict['bill_group'] == 'A':
-        if len(bill_dict['quantity']) >= 1:
+        if 'AO' in bill_dict['quantity']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AO'), value=float(bill_dict['quantity'][0]))
+                'AO'), value=float(bill_dict['quantity']['AO']))
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['quantity']) >= 2:
+        if 'AP' in bill_dict['quantity']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AP'), value=float(bill_dict['quantity'][1]))
+                'AP'), value=float(bill_dict['quantity']['AP']))
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['quantity']) >= 3:
+        if 'AN' in bill_dict['quantity']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AN'), value=float(bill_dict['quantity'][2]))
+                'AN'), value=float(bill_dict['quantity']['AN']))
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['quantity']) >= 4:
+        if 'AX' in bill_dict['quantity']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AX'), value=float(bill_dict['quantity'][3]))
+                'AX'), value=float(bill_dict['quantity']['AX']))
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['quantity']) >= 5:
+        if 'AY' in bill_dict['quantity']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AY'), value=float(bill_dict['quantity'][4]))
+                'AY'), value=float(bill_dict['quantity']['AY']))
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['quantity']) >= 6:
+        if 'AW' in bill_dict['quantity']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AW'), value=float(bill_dict['quantity'][5]))
+                'AW'), value=float(bill_dict['quantity']['AW']))
             price_cell.number_format = 'R$ #,##0.00'
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['unit_price']) >= 1:
+        if 'AC' in bill_dict['unit_price']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AC'), value=float(round(bill_dict['unit_price'][0], 5)))
+                'AC'), value=float(bill_dict['unit_price']['AC']))
             price_cell.number_format = 'R$ #,##0.00000'
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['unit_price']) >= 2:
+        if 'AB' in bill_dict['unit_price']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AB'), value=float(bill_dict['unit_price'][1]))
+                'AB'), value=float(bill_dict['unit_price']['AB']))
             price_cell.number_format = 'R$ #,##0.00000'
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['prices']) >= 1:
+        if 'Q' in bill_dict['prices']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'Q'), value=float(bill_dict['prices'][0]))
+                'Q'), value=float(bill_dict['prices']['Q']))
             price_cell.number_format = 'R$ #,##0.00'
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['prices']) >= 2:
+        if 'Z' in bill_dict['prices']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'Z'), value=float(bill_dict['prices'][1]))
+                'Z'), value=float(bill_dict['prices']['Z']))
             price_cell.number_format = 'R$ #,##0.00'
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['prices']) >= 3:
+        if 'S' in bill_dict['prices']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'S'), value=float(bill_dict['prices'][2]))
+                'S'), value=float(bill_dict['prices']['S']))
             price_cell.number_format = 'R$ #,##0.00'
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['prices']) >= 4:
+        if 'U' in bill_dict['prices']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'U'), value=float(bill_dict['prices'][3]))
+                'U'), value=float(bill_dict['prices']['U']))
             price_cell.number_format = 'R$ #,##0.00'
         price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['kwh_consumed']) >= 1:
+        if 'AT' in bill_dict['kwh_consumed']:
             sheet.cell(row=max_row, column=column_index_from_string(
-                'AT'), value=float(bill_dict['kwh_consumed'][0]))
-        if len(bill_dict['kwh_consumed']) >= 2:
+                'AT'), value=float(bill_dict['kwh_consumed']['AT']))
+            
+        if 'AS' in bill_dict['kwh_consumed']:
             sheet.cell(row=max_row, column=column_index_from_string(
-                'AS'), value=float(bill_dict['kwh_consumed'][1]))
-        if len(bill_dict['kwh_consumed']) >= 3:
+                'AS'), value=float(bill_dict['kwh_consumed']['AS']))
+            
+        if 'AU' in bill_dict['kwh_consumed']:
             sheet.cell(row=max_row, column=column_index_from_string(
-                'AU'), value=float(bill_dict['kwh_consumed'][2]))
+                'AU'), value=float(bill_dict['kwh_consumed']['AU']))
     else:
-        if len(bill_dict['quantity']) >= 1:
+        if 'AO' in bill_dict['quantity']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AO'), value=float(bill_dict['quantity'][0]))
+                'AO'), value=float(bill_dict['quantity']['AO']))
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['quantity']) >= 2:
+        if 'AX' in bill_dict['quantity']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AX'), value=float(bill_dict['quantity'][1]))
+                'AX'), value=float(bill_dict['quantity']['AX']))
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['unit_price']) >= 1:
+        if 'AC' in bill_dict['unit_price']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AC'), value=float(bill_dict['unit_price'][0]))
+                'AC'), value=float(bill_dict['unit_price']['AC']))
             price_cell.number_format = 'R$ #,##0.00000'
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['unit_price']) >= 2:
+        if 'AB' in bill_dict['unit_price']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AB'), value=float(bill_dict['unit_price'][0]))
+                'AB'), value=float(bill_dict['unit_price']['AB']))
             price_cell.number_format = 'R$ #,##0.00000'
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['prices']) >= 1:
+        if 'Z' in bill_dict['prices']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'Z'), value=float(bill_dict['prices'][1]))
+                'Z'), value=float(bill_dict['prices']['Z']))
             price_cell.number_format = 'R$ #,##0.00'
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['prices']) >= 2:
+        if 'U' in bill_dict['prices']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'U'), value=float(bill_dict['prices'][0]))
+                'U'), value=float(bill_dict['prices']['U']))
             price_cell.number_format = 'R$ #,##0.00'
             price_cell.font = font_trebuchet_ms
 
-        if len(bill_dict['kwh_consumed']) >= 1:
+        if 'AT' in bill_dict['kwh_consumed']:
             sheet.cell(row=max_row, column=column_index_from_string(
-                'AT'), value=float(bill_dict['kwh_consumed'][0]))
+                'AT'), value=float(bill_dict['kwh_consumed']['AT']))
 
 
 def insert_sheet(sheet_path, bill_dict):
