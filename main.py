@@ -9,6 +9,7 @@ from export_pdf import find_values, insert_sheet
 
 
 sheet_path = "planilha.xlsx"
+ucs_sheet_path = "ucs.xlsx"
 
 
 class MyHandler(FileSystemEventHandler):
@@ -18,9 +19,7 @@ class MyHandler(FileSystemEventHandler):
             bill_dict = self.read_pdf(event.src_path)
             print(f'Arquivo PDF detectado: {event.src_path}')
             insert_sheet(sheet_path, bill_dict)
-        if event.src_path.endswith('.xlsx'):
-            print(f'Arquivo Excel detectado: {event.src_path}')
-            self.read_excel(event.src_path)
+            self.read_excel(ucs_sheet_path, bill_dict)
 
     def read_pdf(self, file_path):
         time.sleep(1)
@@ -39,10 +38,10 @@ class MyHandler(FileSystemEventHandler):
         except Exception as e:
             print(f"Não foi possível ler o arquivo {file_path}: {e}")
 
-    def read_excel(self, file_path):
+    def read_excel(self, file_path, bill_dict):
         time.sleep(1)
         try:
-            xlsxl_dict = get_xlsx_uc(file_path, sheet_path)
+            xlsxl_dict = get_xlsx_uc(file_path, sheet_path, bill_dict)
             return xlsxl_dict
         except Exception as e:
             print(f"Não foi possível ler o arquivo {file_path}: {e}")

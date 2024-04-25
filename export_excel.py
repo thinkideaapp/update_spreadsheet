@@ -60,9 +60,13 @@ def find_last_row_value(ws, sheet1_dict):
     return None
 
 
-def get_xlsx_uc(planilha1, planilha2):
+def get_xlsx_uc(planilha1, planilha2, bill_dict):
     # Lê a última linha da primeira planilha
     last_row_dict = ler_ultima_linha(planilha1)
+    uc1 = str(last_row_dict['C']).split('- ')[-1]
+    if uc1 != bill_dict['uc']:
+        print("UC não encontrada na planilha.")
+        return
     # Carrega a segunda planilha
     wb = load_workbook(planilha2)
     # Seleciona a primeira planilha
@@ -72,13 +76,13 @@ def get_xlsx_uc(planilha1, planilha2):
     if last_row:
         # Se encontrar, insere os valores de G, H e I
         ws.cell(row=last_row, column=column_index_from_string(
-            "AD")).value = last_row_dict['G']
+            "AD")).value = last_row_dict['G'] + 1
         ws.cell(row=last_row, column=column_index_from_string(
             "AE")).value = last_row_dict['H']
         ws.cell(row=last_row, column=column_index_from_string(
             "AF")).value = last_row_dict['I']
         # Salva as alterações na planilha
         wb.save(planilha2)
-        print("Valores inseridos na planilha.")
+        print(f"Valores inseridos na linha {last_row}.")
     else:
         print("Valor não encontrado na segunda planilha.")
