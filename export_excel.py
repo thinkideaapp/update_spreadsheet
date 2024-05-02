@@ -81,6 +81,5 @@ def get_xlsx_uc(planilha1, planilha2, bill_dict):
             "AF")).value = last_row_dict['I']
         # Salva as alterações na planilha
         wb.save(planilha2)
-        print(f"Valores inseridos na linha {last_row}.")
     else:
         print("Valor não encontrado na segunda planilha.")
