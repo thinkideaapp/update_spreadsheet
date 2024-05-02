@@ -240,12 +240,14 @@ def get_info_rows(text, get_type, bill_group):
                 row_list.append(value)
                 info_dict[f"ENERGIA GERAÇÃO {kwh_num}"] = value
                 kwh_num += 1
+    try:
+        for chave, valor in info_dict.items():
+            info_dict[chave] = float(valor.replace('.', '').replace(',', '.'))
+        info_dict = get_rows_columns(info_dict, bill_group, get_type)
+        return info_dict
+    except:
+        return []
 
-    for chave, valor in info_dict.items():
-        info_dict[chave] = float(valor.replace('.', '').replace(',', '.'))
-
-    info_dict = get_rows_columns(info_dict, bill_group, get_type)
-    return info_dict
 
 
 def bill_classification(text):
@@ -290,6 +292,8 @@ def duplicate_columns_value(ws, last_row, insert_row):
     try:
         value_e = datetime.datetime.strptime(value_e, "%Y-%m-%d %H:%M:%S")
         value_e = value_e.strftime("%d/%m/%Y")
+        value_l = datetime.datetime.strptime(value_l, "%Y-%m-%d %H:%M:%S")
+        value_l = value_l.strftime("%d/%m/%Y")
     except:
         pass
 
