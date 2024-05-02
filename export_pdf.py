@@ -39,8 +39,8 @@ def get_rows_columns(info_dict, bill_group, get_type):
         elif get_type == "unit_price":
             try:
                 new_dict = {
-                    "AC": info_dict.get("ENERGIA ATIVA FORNECIDA FP", 0) + info_dict.get("ENERGIA ATIVA FORNECIDA FP -", 0),
-                    "AB": info_dict.get("ENERGIA ATIVA FORNECIDA P", 0) + info_dict.get("ENERGIA ATIVA FORNECIDA P -", 0),
+                    "AC": info_dict.get("ENERGIA ATIVA FORNECIDA FP 1", 0) + info_dict.get("ENERGIA ATIVA FORNECIDA FP 3", 0),
+                    "AB": info_dict.get("ENERGIA ATIVA FORNECIDA P 2", 0) + info_dict.get("ENERGIA ATIVA FORNECIDA P 4", 0),
                 }
             except:
                 pass
@@ -57,8 +57,8 @@ def get_rows_columns(info_dict, bill_group, get_type):
         elif get_type == "kwh_consumed":
             try:
                 new_dict = {
-                    "AT": info_dict.get("ENERGIA GERAÇÃO 1", 0),
-                    "AS": info_dict.get("ENERGIA GERAÇÃO 2", 0),
+                    "AS": info_dict.get("ENERGIA GERAÇÃO 1", 0),
+                    "AT": info_dict.get("ENERGIA GERAÇÃO 2", 0),
                     "AU": info_dict.get("ENERGIA GERAÇÃO 3", 0),
                 }
             except:
@@ -91,7 +91,7 @@ def get_rows_columns(info_dict, bill_group, get_type):
         elif get_type == "kwh_consumed":
             try:
                 new_dict = {
-                    "AT": info_dict.get("ENERGIA GERAÇÃO 1", 0),
+                    "AS": info_dict.get("ENERGIA GERAÇÃO 1", 0),
                 }
             except:
                 pass
@@ -150,6 +150,7 @@ def get_info_rows(text, get_type, bill_group):
     value = None
     info_dict = {}  # Inicializa o dicionário
     kwh_num = 1
+    energy_num = 1
     for i, row in enumerate(rows, start=1):
         if get_type == "quantity":
             if row.split(' kWh')[0] in quantity_rows:
@@ -188,7 +189,8 @@ def get_info_rows(text, get_type, bill_group):
                     if len(row.split(' kWh')[0].split(" ")) == 3:
                         value = row.split(' ')[4]
                         row_list.append(value)
-                info_dict[row.split(' kWh')[0]] = value
+                info_dict[f"{row.split(' kWh')[0]} {energy_num}"] = value
+                energy_num += 1
             if row.replace('-', '--').split('- ')[0] in unit_prices_rows:
                 if bill_group == "A":
                     if len(row.split(' kWh')[0].split(" ")) == 6:
@@ -201,7 +203,8 @@ def get_info_rows(text, get_type, bill_group):
                     if len(row.split(' kWh')[0].split(" ")) == 5:
                         value = row.split(' ')[6]
                         row_list.append(value)
-                info_dict[row.replace('-', '--').split('- ')[0]] = value
+                info_dict[f'{row.split(' - ')[0]} {energy_num}'] = value
+                energy_num += 1
         elif get_type == "prices":
             if row.split(' kW')[0] in prices_rows:
                 if len(row.split(' kW')[0].split(" ")) == 1:
@@ -288,6 +291,20 @@ def duplicate_columns_value(ws, last_row, insert_row):
         ws.cell(row=last_row, column=column_index_from_string("K")).value)
     value_l = str(
         ws.cell(row=last_row, column=column_index_from_string("L")).value)
+    value_az = str(
+        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+    value_ba = str(
+        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+    value_cn = str(
+        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+    value_co = str(
+        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+    value_cp = str(
+        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+    value_cq = str(
+        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+    value_cr = str(
+        ws.cell(row=last_row, column=column_index_from_string("L")).value)
 
     try:
         value_e = datetime.datetime.strptime(value_e, "%Y-%m-%d %H:%M:%S")
@@ -320,6 +337,24 @@ def duplicate_columns_value(ws, last_row, insert_row):
         "K")).value = value_k if value_k != "None" else ""
     ws.cell(row=insert_row, column=column_index_from_string(
         "L")).value = value_l if value_l != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "AZ")).value = value_az if value_az != "None" else ""
+    price_cell = ws.cell(row=insert_row, column=column_index_from_string("BA"))
+    price_cell.value = float(value_ba) if value_ba != "None" else ""
+    price_cell.number_format = 'R$ #,##0.00'
+    price_cell = ws.cell(row=insert_row, column=column_index_from_string("CN"))
+    price_cell.value = float(value_cn) if value_cn != "None" else ""
+    price_cell.number_format = 'R$ #,##0.00'
+    price_cell = ws.cell(row=insert_row, column=column_index_from_string("CO"))
+    price_cell.value = float(value_co) if value_co != "None" else ""
+    price_cell.number_format = 'R$ #,##0.00'
+    price_cell = ws.cell(row=insert_row, column=column_index_from_string("CP"))
+    price_cell.value = float(value_cp) if value_cp != "None" else ""
+    price_cell.number_format = 'R$ #,##0.00'
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "CQ")).value = value_cq if value_cq != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "CR")).value = value_cr if value_cr != "None" else ""
 
 
 def find_values(text):
@@ -420,7 +455,6 @@ def organize_sheet_columns(sheet, max_row, bill_dict):
         if 'AW' in bill_dict['quantity']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
                 'AW'), value=float(bill_dict['quantity']['AW']))
-            price_cell.number_format = 'R$ #,##0.00'
             price_cell.font = font_trebuchet_ms
 
         if 'AC' in bill_dict['unit_price']:
@@ -532,8 +566,6 @@ def insert_sheet(sheet_path, bill_dict):
     workbook = openpyxl.load_workbook(sheet_path)
     sheet = workbook.active
     last_row_uc = find_last_row_value(sheet, bill_dict['uc'])
-    # last_row = last_row_with_value(sheet, bill_dict['uc'], 1)
-    # last_row_dict = row_to_dict(sheet, last_row)
 
     value_column = column_index_from_string("O")
     max_row = sheet.max_row
