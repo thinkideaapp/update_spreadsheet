@@ -5,6 +5,8 @@ import openpyxl
 from openpyxl.styles import Alignment, Font
 from openpyxl.utils import column_index_from_string
 
+from export_excel import find_last_row_value, read_last_row
+
 
 def format_date(date):
     # Convert date from "DD/MM/YYYY" to "MARÇO/YYYY"
@@ -261,6 +263,61 @@ def bill_classification(text):
         return None
 
 
+def duplicate_columns_value(ws, last_row, insert_row):
+    value_a = str(
+        ws.cell(row=last_row, column=column_index_from_string("A")).value)
+    value_c = str(
+        ws.cell(row=last_row, column=column_index_from_string("C")).value)
+    value_d = str(
+        ws.cell(row=last_row, column=column_index_from_string("D")).value)
+    value_e = str(
+        ws.cell(row=last_row, column=column_index_from_string("E")).value)
+    value_f = str(
+        ws.cell(row=last_row, column=column_index_from_string("F")).value)
+    value_g = str(
+        ws.cell(row=last_row, column=column_index_from_string("G")).value)
+    value_h = str(
+        ws.cell(row=last_row, column=column_index_from_string("H")).value)
+    value_i = str(
+        ws.cell(row=last_row, column=column_index_from_string("I")).value)
+    value_j = str(
+        ws.cell(row=last_row, column=column_index_from_string("J")).value)
+    value_k = str(
+        ws.cell(row=last_row, column=column_index_from_string("K")).value)
+    value_l = str(
+        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+
+    try:
+        value_e = datetime.datetime.strptime(value_e, "%Y-%m-%d %H:%M:%S")
+        value_e = value_e.strftime("%d/%m/%Y")
+    except:
+        pass
+
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "A")).value = value_a if value_a != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "C")).value = value_c if value_c != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "D")).value = value_d if value_d != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "E")).value = value_e if value_e != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "F")).value = value_f if value_f != "None" else ""
+    price_cell = ws.cell(row=insert_row, column=column_index_from_string("G"))
+    price_cell.value = float(value_g) if value_g != "None" else ""
+    price_cell.number_format = 'R$ #,##0.00'
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "H")).value = value_h if value_h != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "I")).value = value_i if value_i != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "J")).value = value_j if value_j != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "K")).value = value_k if value_k != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "L")).value = value_l if value_l != "None" else ""
+
+
 def find_values(text):
     bill_group = bill_classification(text)
     # Definindo padrões de expressões regulares para o valor e a data
@@ -401,11 +458,11 @@ def organize_sheet_columns(sheet, max_row, bill_dict):
         if 'AT' in bill_dict['kwh_consumed']:
             sheet.cell(row=max_row, column=column_index_from_string(
                 'AT'), value=float(bill_dict['kwh_consumed']['AT']))
-            
+
         if 'AS' in bill_dict['kwh_consumed']:
             sheet.cell(row=max_row, column=column_index_from_string(
                 'AS'), value=float(bill_dict['kwh_consumed']['AS']))
-            
+
         if 'AU' in bill_dict['kwh_consumed']:
             sheet.cell(row=max_row, column=column_index_from_string(
                 'AU'), value=float(bill_dict['kwh_consumed']['AU']))
@@ -449,9 +506,30 @@ def organize_sheet_columns(sheet, max_row, bill_dict):
                 'AT'), value=float(bill_dict['kwh_consumed']['AT']))
 
 
+def last_row_with_value(worksheet, uc, column_index):
+    max_row = worksheet.max_row
+    for row in range(max_row, 0, -1):
+        cell_value = worksheet.cell(row=row, column=column_index).value
+        if cell_value == uc:
+            return row
+    return None
+
+
+def row_to_dict(worksheet, row_index):
+    headers = [cell.value for cell in worksheet[1]]
+    data = {}
+    for col, header in enumerate(headers, start=1):
+        cell = worksheet.cell(row=row_index, column=col)
+        data[header] = cell.value
+    return data
+
+
 def insert_sheet(sheet_path, bill_dict):
     workbook = openpyxl.load_workbook(sheet_path)
     sheet = workbook.active
+    last_row_uc = find_last_row_value(sheet, bill_dict['uc'])
+    # last_row = last_row_with_value(sheet, bill_dict['uc'], 1)
+    # last_row_dict = row_to_dict(sheet, last_row)
 
     value_column = column_index_from_string("O")
     max_row = sheet.max_row
@@ -465,6 +543,7 @@ def insert_sheet(sheet_path, bill_dict):
             max_row = linha + 1
             break
     organize_sheet_columns(sheet, max_row, bill_dict)
+    duplicate_columns_value(sheet, last_row_uc, max_row)
 
     workbook.save(sheet_path)
     print(f"Valor inserido na planilha {sheet_path}")

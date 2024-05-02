@@ -28,7 +28,7 @@ def convert_date(date_str):
     return date_obj.strftime('%Y-%m')
 
 
-def ler_ultima_linha(planilha):
+def read_last_row(planilha):
     # Carrega a planilha
     wb = load_workbook(planilha)
     # Seleciona a primeira planilha
@@ -44,17 +44,17 @@ def ler_ultima_linha(planilha):
     return ultima_linha_dict
 
 
-def find_last_row_value(ws, sheet1_dict):
-    uc1 = str(sheet1_dict['C']).split('- ')[-1]
-    date1 = sheet1_dict['F']
+def find_last_row_value(ws, uc1, date1=None):
     # Inicia a busca na linha da última linha preenchida
     num_rows = ws.max_row
     while num_rows > 0:
         if ws.cell(row=num_rows, column=2).value == int(uc1):
             date2 = convert_date(str(ws.cell(row=num_rows, column=13).value))
-            if date2 == date1:
+            if date1:
+                if date2 == date1:
+                    return num_rows
+            else:
                 return num_rows
-            return num_rows
         num_rows -= 1
     # Retorna None se não encontrar o valor
     return None
@@ -62,17 +62,15 @@ def find_last_row_value(ws, sheet1_dict):
 
 def get_xlsx_uc(planilha1, planilha2, bill_dict):
     # Lê a última linha da primeira planilha
-    last_row_dict = ler_ultima_linha(planilha1)
+    last_row_dict = read_last_row(planilha1)
     uc1 = str(last_row_dict['C']).split('- ')[-1]
-    if uc1 != bill_dict['uc']:
-        print("UC não encontrada na planilha.")
-        return
+    date1 = last_row_dict['F']
     # Carrega a segunda planilha
     wb = load_workbook(planilha2)
     # Seleciona a primeira planilha
     ws = wb.active
     # Procura a linha com o valor desejado na coluna B
-    last_row = find_last_row_value(ws, last_row_dict)
+    last_row = find_last_row_value(ws, uc1, date1)
     if last_row:
         # Se encontrar, insere os valores de G, H e I
         ws.cell(row=last_row, column=column_index_from_string(
