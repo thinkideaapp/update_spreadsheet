@@ -1,5 +1,5 @@
 from datetime import datetime
-import locale
+import csv
 
 from openpyxl import load_workbook
 from openpyxl.utils import column_index_from_string
@@ -56,34 +56,29 @@ def convert_date(date_str, reverse=False):
         return date_obj.strftime('%Y-%m')
 
 
-def read_last_row(planilha, uc, date):
-    # Carregar a planilha
-    wb = load_workbook(planilha)
-
-    # Selecionar a primeira planilha
-    planilha = wb.active
-
-    # Encontrar o número de linhas e colunas na planilha
-    num_linhas = planilha.max_row
-    num_colunas = planilha.max_column
-
+def read_last_row(planilha, uc):
     # Inicializar um dicionário vazio
     dados_dict = {}
 
-    # Iterar sobre as linhas da planilha
-    for linha in range(1, num_linhas + 1):
-        valor_b = str(planilha.cell(row=linha, column=3).value).split('- ')[-1]
-        valor_f = convert_date(
-            str(planilha.cell(row=linha, column=6).value), True)
+    # Abrir o arquivo CSV
+    with open(planilha, newline='') as csvfile:
+        # Ler o arquivo CSV usando o delimitador ';'
+        reader = csv.reader(csvfile, delimiter=';')
 
-        # Verificar se o valor na coluna B é igual a 109228
-        if valor_b == uc:
-            # Iterar sobre as colunas da última linha
-            for coluna in range(1, num_colunas + 1):
-                # Adicionar os valores da última linha ao dicionário
-                chave = planilha.cell(row=linha, column=coluna).value
-                dados_dict[f'{coluna}'] = chave
-            print(f'Valor encontrado na linha: {linha}')
+        # Iterar sobre as linhas do arquivo CSV
+        for linha in reader:
+            # Ajustar o índice de acordo com a posição da coluna
+            valor_b = str(linha[2]).split('- ')[-1]
+
+            # Verificar se o valor na coluna B é igual a 109228
+            if valor_b == uc:
+                # Atualizar o dicionário com os valores da última linha
+                for idx, valor in enumerate(linha):
+                    # Usar str(idx + 1) como chave para o dicionário
+                    dados_dict[str(idx + 1)] = valor
+
+                print(f'Valor encontrado na linha: {linha}')
+
     return dados_dict
 
 
@@ -110,7 +105,7 @@ def find_last_row_value(ws, uc1, date1=None, reverse=False):
 def get_xlsx_uc(planilha1, planilha2, bill_dict):
     # Lê a última linha da primeira planilha
     last_row_dict = read_last_row(
-        planilha1, bill_dict['uc'], bill_dict['date'])
+        planilha1, bill_dict['uc'])
     # Carrega a segunda planilha
     wb = load_workbook(planilha2)
     # Seleciona a primeira planilha
