@@ -77,7 +77,7 @@ def read_last_row(planilha, uc, date):
             str(planilha.cell(row=linha, column=6).value), True)
 
         # Verificar se o valor na coluna B é igual a 109228
-        if valor_b == uc and valor_f == date:
+        if valor_b == uc:
             # Iterar sobre as colunas da última linha
             for coluna in range(1, num_colunas + 1):
                 # Adicionar os valores da última linha ao dicionário
