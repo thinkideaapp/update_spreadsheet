@@ -540,9 +540,8 @@ def organize_sheet_columns(sheet, max_row, bill_dict):
             price_cell.font = font_trebuchet_ms
 
         if 'AW' in bill_dict['quantity']:
-            price_cell = sheet.cell(row=max_row, column=column_index_from_string(
+            sheet.cell(row=max_row, column=column_index_from_string(
                 'AW'), value=bill_dict['quantity']['AW'])
-            price_cell.font = font_trebuchet_ms
 
         if 'AC' in bill_dict['unit_price']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
