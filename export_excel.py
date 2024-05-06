@@ -115,12 +115,21 @@ def get_xlsx_uc(planilha1, planilha2, bill_dict):
         ws, bill_dict['uc'], bill_dict['date'], True)
     if last_row and last_row_dict:
         # Se encontrar, insere os valores de G, H e I
+        try:
+            value_ad = float(last_row_dict['7'])
+            value_ae = float(last_row_dict['8'])
+            value_af = float(last_row_dict['9'])
+        except:
+            value_ad = last_row_dict['7']
+            value_ae = last_row_dict['8']
+            value_af = last_row_dict['9']
+            
         ws.cell(row=last_row, column=column_index_from_string(
-            "AD")).value = last_row_dict['7']
+            "AD")).value = value_ad
         ws.cell(row=last_row, column=column_index_from_string(
-            "AE")).value = last_row_dict['8']
+            "AE")).value = value_ae
         ws.cell(row=last_row, column=column_index_from_string(
-            "AF")).value = last_row_dict['9']
+            "AF")).value = value_af
         # Salva as alterações na planilha
         wb.save(planilha2)
     else:
