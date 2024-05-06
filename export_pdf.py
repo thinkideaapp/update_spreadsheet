@@ -268,6 +268,7 @@ def bill_classification(text):
 
 
 def duplicate_columns_value(ws, last_row, insert_row):
+    num_default = re.compile(r'\d+')
     value_a = str(
         ws.cell(row=last_row, column=column_index_from_string("A")).value)
     value_c = str(
@@ -292,64 +293,94 @@ def duplicate_columns_value(ws, last_row, insert_row):
         ws.cell(row=last_row, column=column_index_from_string("L")).value)
     value_ag = str(
         ws.cell(row=last_row, column=column_index_from_string("AG")).value)
+    value_ag = num_default.sub(str(insert_row), value_ag)
     value_ah = str(
         ws.cell(row=last_row, column=column_index_from_string("AH")).value)
+    value_ah = num_default.sub(str(insert_row), value_ah)
     value_ai = str(
         ws.cell(row=last_row, column=column_index_from_string("AI")).value)
+    value_ai = num_default.sub(str(insert_row), value_ai)
     value_aj = str(
         ws.cell(row=last_row, column=column_index_from_string("AJ")).value)
+    value_aj = num_default.sub(str(insert_row), value_aj)
     value_ak = str(
         ws.cell(row=last_row, column=column_index_from_string("AK")).value)
+    value_ak = num_default.sub(str(insert_row), value_ak)
     value_al = str(
         ws.cell(row=last_row, column=column_index_from_string("AL")).value)
+    value_al = num_default.sub(str(insert_row), value_al)
     value_am = str(
         ws.cell(row=last_row, column=column_index_from_string("AM")).value)
+    value_am = num_default.sub(str(insert_row), value_am)
     value_aq = str(
         ws.cell(row=last_row, column=column_index_from_string("AQ")).value)
+    value_aq = num_default.sub(str(insert_row), value_aq)
     value_ar = str(
         ws.cell(row=last_row, column=column_index_from_string("AR")).value)
+    value_ar = num_default.sub(str(insert_row), value_ar)
     value_av = str(
         ws.cell(row=last_row, column=column_index_from_string("AV")).value)
+    value_av = num_default.sub(str(insert_row), value_av)
     value_az = str(
         ws.cell(row=last_row, column=column_index_from_string("AZ")).value)
+    value_az = num_default.sub(str(insert_row), value_az)
     value_ba = str(
         ws.cell(row=last_row, column=column_index_from_string("BA")).value)
+    value_ba = num_default.sub(str(insert_row), value_ba)
     value_bb = str(
         ws.cell(row=last_row, column=column_index_from_string("BB")).value)
+    value_bb = num_default.sub(str(insert_row), value_bb)
     value_bc = str(
         ws.cell(row=last_row, column=column_index_from_string("BC")).value)
+    value_bc = num_default.sub(str(insert_row), value_bc)
     value_bd = str(
         ws.cell(row=last_row, column=column_index_from_string("BD")).value)
+    value_bd = num_default.sub(str(insert_row), value_bd)
     value_be = str(
         ws.cell(row=last_row, column=column_index_from_string("BE")).value)
+    value_be = num_default.sub(str(insert_row), value_be)
     value_bf = str(
         ws.cell(row=last_row, column=column_index_from_string("BF")).value)
+    value_bf = num_default.sub(str(insert_row), value_bf)
     value_bg = str(
         ws.cell(row=last_row, column=column_index_from_string("BG")).value)
+    value_bg = num_default.sub(str(insert_row), value_bg)
     value_bh = str(
         ws.cell(row=last_row, column=column_index_from_string("BH")).value)
+    value_bh = num_default.sub(str(insert_row), value_bh)
     value_bi = str(
         ws.cell(row=last_row, column=column_index_from_string("BI")).value)
+    value_bi = num_default.sub(str(insert_row), value_bi)
     value_bj = str(
         ws.cell(row=last_row, column=column_index_from_string("BJ")).value)
+    value_bj = num_default.sub(str(insert_row), value_bj)
     value_bk = str(
         ws.cell(row=last_row, column=column_index_from_string("BK")).value)
+    value_bk = num_default.sub(str(insert_row), value_bk)
     value_bl = str(
         ws.cell(row=last_row, column=column_index_from_string("BL")).value)
+    value_bl = num_default.sub(str(insert_row), value_bl)
     value_bm = str(
         ws.cell(row=last_row, column=column_index_from_string("BM")).value)
+    value_bm = num_default.sub(str(insert_row), value_bm)
     value_bn = str(
         ws.cell(row=last_row, column=column_index_from_string("BN")).value)
+    value_bn = num_default.sub(str(insert_row), value_bn)
     value_cn = str(
         ws.cell(row=last_row, column=column_index_from_string("CN")).value)
+    value_cn = num_default.sub(str(insert_row), value_cn)
     value_co = str(
         ws.cell(row=last_row, column=column_index_from_string("CO")).value)
+    value_co = num_default.sub(str(insert_row), value_co)
     value_cp = str(
         ws.cell(row=last_row, column=column_index_from_string("CP")).value)
+    value_cp = num_default.sub(str(insert_row), value_cp)
     value_cq = str(
         ws.cell(row=last_row, column=column_index_from_string("CQ")).value)
+    value_cq = num_default.sub(str(insert_row), value_cq)
     value_cr = str(
         ws.cell(row=last_row, column=column_index_from_string("CR")).value)
+    value_cr = num_default.sub(str(insert_row), value_cr)
 
     try:
         value_e = datetime.datetime.strptime(value_e, "%Y-%m-%d %H:%M:%S")
