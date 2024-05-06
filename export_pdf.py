@@ -252,7 +252,6 @@ def get_info_rows(text, get_type, bill_group):
         return []
 
 
-
 def bill_classification(text):
     # Expressão regular para encontrar a letra após "Classificação: "
     text_default = r'Classificação:\s*([A-Z])'
@@ -291,20 +290,66 @@ def duplicate_columns_value(ws, last_row, insert_row):
         ws.cell(row=last_row, column=column_index_from_string("K")).value)
     value_l = str(
         ws.cell(row=last_row, column=column_index_from_string("L")).value)
+    value_ag = str(
+        ws.cell(row=last_row, column=column_index_from_string("AG")).value)
+    value_ah = str(
+        ws.cell(row=last_row, column=column_index_from_string("AH")).value)
+    value_ai = str(
+        ws.cell(row=last_row, column=column_index_from_string("AI")).value)
+    value_aj = str(
+        ws.cell(row=last_row, column=column_index_from_string("AJ")).value)
+    value_ak = str(
+        ws.cell(row=last_row, column=column_index_from_string("AK")).value)
+    value_al = str(
+        ws.cell(row=last_row, column=column_index_from_string("AL")).value)
+    value_am = str(
+        ws.cell(row=last_row, column=column_index_from_string("AM")).value)
+    value_aq = str(
+        ws.cell(row=last_row, column=column_index_from_string("AQ")).value)
+    value_ar = str(
+        ws.cell(row=last_row, column=column_index_from_string("AR")).value)
+    value_av = str(
+        ws.cell(row=last_row, column=column_index_from_string("AV")).value)
     value_az = str(
-        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+        ws.cell(row=last_row, column=column_index_from_string("AZ")).value)
     value_ba = str(
-        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+        ws.cell(row=last_row, column=column_index_from_string("BA")).value)
+    value_bb = str(
+        ws.cell(row=last_row, column=column_index_from_string("BB")).value)
+    value_bc = str(
+        ws.cell(row=last_row, column=column_index_from_string("BC")).value)
+    value_bd = str(
+        ws.cell(row=last_row, column=column_index_from_string("BD")).value)
+    value_be = str(
+        ws.cell(row=last_row, column=column_index_from_string("BE")).value)
+    value_bf = str(
+        ws.cell(row=last_row, column=column_index_from_string("BF")).value)
+    value_bg = str(
+        ws.cell(row=last_row, column=column_index_from_string("BG")).value)
+    value_bh = str(
+        ws.cell(row=last_row, column=column_index_from_string("BH")).value)
+    value_bi = str(
+        ws.cell(row=last_row, column=column_index_from_string("BI")).value)
+    value_bj = str(
+        ws.cell(row=last_row, column=column_index_from_string("BJ")).value)
+    value_bk = str(
+        ws.cell(row=last_row, column=column_index_from_string("BK")).value)
+    value_bl = str(
+        ws.cell(row=last_row, column=column_index_from_string("BL")).value)
+    value_bm = str(
+        ws.cell(row=last_row, column=column_index_from_string("BM")).value)
+    value_bn = str(
+        ws.cell(row=last_row, column=column_index_from_string("BN")).value)
     value_cn = str(
-        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+        ws.cell(row=last_row, column=column_index_from_string("CN")).value)
     value_co = str(
-        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+        ws.cell(row=last_row, column=column_index_from_string("CO")).value)
     value_cp = str(
-        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+        ws.cell(row=last_row, column=column_index_from_string("CP")).value)
     value_cq = str(
-        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+        ws.cell(row=last_row, column=column_index_from_string("CQ")).value)
     value_cr = str(
-        ws.cell(row=last_row, column=column_index_from_string("L")).value)
+        ws.cell(row=last_row, column=column_index_from_string("CR")).value)
 
     try:
         value_e = datetime.datetime.strptime(value_e, "%Y-%m-%d %H:%M:%S")
@@ -338,19 +383,61 @@ def duplicate_columns_value(ws, last_row, insert_row):
     ws.cell(row=insert_row, column=column_index_from_string(
         "L")).value = value_l if value_l != "None" else ""
     ws.cell(row=insert_row, column=column_index_from_string(
+        "AG")).value = value_ag if value_ag != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "AH")).value = value_ah if value_ah != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "AI")).value = value_ai if value_ai != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "AJ")).value = value_aj if value_aj != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "AK")).value = value_ak if value_ak != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "AL")).value = value_al if value_al != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "AM")).value = value_am if value_am != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "AQ")).value = value_aq if value_aq != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "AR")).value = value_ar if value_ar != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "AV")).value = value_av if value_av != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
         "AZ")).value = value_az if value_az != "None" else ""
-    price_cell = ws.cell(row=insert_row, column=column_index_from_string("BA"))
-    price_cell.value = float(value_ba) if value_ba != "None" else ""
-    price_cell.number_format = 'R$ #,##0.00'
-    price_cell = ws.cell(row=insert_row, column=column_index_from_string("CN"))
-    price_cell.value = float(value_cn) if value_cn != "None" else ""
-    price_cell.number_format = 'R$ #,##0.00'
-    price_cell = ws.cell(row=insert_row, column=column_index_from_string("CO"))
-    price_cell.value = float(value_co) if value_co != "None" else ""
-    price_cell.number_format = 'R$ #,##0.00'
-    price_cell = ws.cell(row=insert_row, column=column_index_from_string("CP"))
-    price_cell.value = float(value_cp) if value_cp != "None" else ""
-    price_cell.number_format = 'R$ #,##0.00'
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BA")).value = value_ba if value_ba != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BB")).value = value_bb if value_bb != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BC")).value = value_bc if value_bc != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BD")).value = value_bd if value_bd != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BE")).value = value_be if value_be != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BF")).value = value_bf if value_bf != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BG")).value = value_bg if value_bg != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BH")).value = value_bh if value_bh != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BI")).value = value_bi if value_bi != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BJ")).value = value_bj if value_bj != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BK")).value = value_bk if value_bk != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BL")).value = value_bl if value_bl != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BM")).value = value_bm if value_bm != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "BN")).value = value_bn if value_bn != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "CN")).value = value_cn if value_cn != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "CO")).value = value_co if value_co != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "CP")).value = value_cp if value_cp != "None" else ""
     ws.cell(row=insert_row, column=column_index_from_string(
         "CQ")).value = value_cq if value_cq != "None" else ""
     ws.cell(row=insert_row, column=column_index_from_string(
@@ -454,7 +541,7 @@ def organize_sheet_columns(sheet, max_row, bill_dict):
 
         if 'AW' in bill_dict['quantity']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AW'), value=float(bill_dict['quantity']['AW']))
+                'AW'), value=bill_dict['quantity']['AW'])
             price_cell.font = font_trebuchet_ms
 
         if 'AC' in bill_dict['unit_price']:
