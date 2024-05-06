@@ -203,7 +203,7 @@ def get_info_rows(text, get_type, bill_group):
                     if len(row.split(' kWh')[0].split(" ")) == 5:
                         value = row.split(' ')[6]
                         row_list.append(value)
-                info_dict[f'{row.split(' - ')[0]} {energy_num}'] = value
+                info_dict[f'{row.split(" - ")[0]} {energy_num}'] = value
                 energy_num += 1
         elif get_type == "prices":
             if row.split(' kW')[0] in prices_rows:
