@@ -230,6 +230,8 @@ def get_info_rows(text, get_type, bill_group):
                 prices_rows.remove(row.split(' -')[0])
             if row.split(' -')[0] in prices_rows:
                 value = re.sub("[a-zA-Z]", "", row.split(" ")[-2])
+                if value == '':
+                    value = re.sub("[a-zA-Z]", "", row.split(" ")[5])
                 row_list.append(value)
                 info_dict[row.split(' -')[0]] = value
                 prices_rows.remove(row.split(' -')[0])
