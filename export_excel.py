@@ -84,8 +84,6 @@ def read_last_row(planilha, uc, date):
                 chave = planilha.cell(row=linha, column=coluna).value
                 dados_dict[f'{coluna}'] = chave
             print(f'Valor encontrado na linha: {linha}')
-    if dados_dict == {}:
-        print("Valor não encontrado na segunda planilha.")
     return dados_dict
 
 
@@ -120,7 +118,7 @@ def get_xlsx_uc(planilha1, planilha2, bill_dict):
     # Procura a linha com o valor desejado na coluna B
     last_row = find_last_row_value(
         ws, bill_dict['uc'], bill_dict['date'], True)
-    if last_row:
+    if last_row and last_row_dict:
         # Se encontrar, insere os valores de G, H e I
         ws.cell(row=last_row, column=column_index_from_string(
             "AD")).value = last_row_dict['7']
@@ -130,3 +128,5 @@ def get_xlsx_uc(planilha1, planilha2, bill_dict):
             "AF")).value = last_row_dict['9']
         # Salva as alterações na planilha
         wb.save(planilha2)
+    else:
+        print("Valor não encontrado na segunda planilha.")

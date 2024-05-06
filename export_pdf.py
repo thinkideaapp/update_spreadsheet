@@ -75,8 +75,8 @@ def get_rows_columns(info_dict, bill_group, get_type):
         if get_type == "unit_price":
             try:
                 new_dict = {
-                    "AB": info_dict.get("ENERGIA ATIVA FORNECIDA", 0),
-                    "AC": info_dict.get("ENERGIA ATIVA FORNECIDA", 0),
+                    "AB": info_dict.get("ENERGIA ATIVA FORNECIDA 1", 0),
+                    "AC": info_dict.get("ENERGIA ATIVA FORNECIDA 1", 0),
                 }
             except:
                 pass
