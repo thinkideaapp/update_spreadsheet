@@ -116,14 +116,14 @@ def get_xlsx_uc(planilha1, planilha2, bill_dict):
     if last_row and last_row_dict:
         # Se encontrar, insere os valores de G, H e I
         try:
-            value_ad = float(last_row_dict['7'])
-            value_ae = float(last_row_dict['8'])
-            value_af = float(last_row_dict['9'])
+            value_ad = round(float(last_row_dict.get('7', 0)), 2)
+            value_ae = round(float(last_row_dict.get('8', 0)), 2)
+            value_af = round(float(last_row_dict.get('9', 0)), 2)
         except:
-            value_ad = last_row_dict['7']
-            value_ae = last_row_dict['8']
-            value_af = last_row_dict['9']
-            
+            value_ad = last_row_dict.get('7', 0)
+            value_ae = last_row_dict.get('8', 0)
+            value_af = last_row_dict.get('9', 0)
+
         ws.cell(row=last_row, column=column_index_from_string(
             "AD")).value = value_ad
         ws.cell(row=last_row, column=column_index_from_string(
