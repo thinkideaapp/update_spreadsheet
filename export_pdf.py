@@ -286,6 +286,7 @@ def duplicate_columns_value(ws, last_row, insert_row):
         ws.cell(row=last_row, column=column_index_from_string("G")).value)
     value_h = str(
         ws.cell(row=last_row, column=column_index_from_string("H")).value)
+    value_h = num_default.sub(str(insert_row), value_h)
     value_i = str(
         ws.cell(row=last_row, column=column_index_from_string("I")).value)
     value_j = str(
