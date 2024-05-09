@@ -3,6 +3,7 @@ import csv
 
 from openpyxl import load_workbook
 from openpyxl.utils import column_index_from_string
+from openpyxl.styles import NamedStyle
 
 
 def convert_date(date_str, reverse=False):
@@ -124,12 +125,15 @@ def get_xlsx_uc(planilha1, planilha2, bill_dict):
             value_ae = last_row_dict.get('8', 0)
             value_af = last_row_dict.get('9', 0)
 
-        ws.cell(row=last_row, column=column_index_from_string(
-            "AD")).value = value_ad
-        ws.cell(row=last_row, column=column_index_from_string(
-            "AE")).value = value_ae
-        ws.cell(row=last_row, column=column_index_from_string(
-            "AF")).value = value_af
+        format_cell = ws.cell(row=last_row, column=column_index_from_string("AD"))
+        format_cell.value = value_ad if value_ad != "None" else ""
+        format_cell.number_format = '#,##0.00'
+        format_cell = ws.cell(row=last_row, column=column_index_from_string("AE"))
+        format_cell.value = value_ae if value_ae != "None" else ""
+        format_cell.number_format = '#,##0.00'
+        format_cell = ws.cell(row=last_row, column=column_index_from_string("AF"))
+        format_cell.value = value_af if value_af != "None" else ""
+        format_cell.number_format = '#,##0.00'
         # Salva as alterações na planilha
         wb.save(planilha2)
     else:

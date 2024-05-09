@@ -3,7 +3,7 @@ import numbers
 import re
 
 import openpyxl
-from openpyxl.styles import Alignment, Font, numbers
+from openpyxl.styles import Alignment, Font, numbers, NamedStyle
 from openpyxl.utils import column_index_from_string
 
 from export_excel import find_last_row_value, read_last_row
@@ -394,99 +394,161 @@ def duplicate_columns_value(ws, last_row, insert_row):
     except:
         pass
 
-    ws.cell(row=insert_row, column=column_index_from_string("A")).value = value_a if value_a != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("C")).value = value_c if value_c != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("D")).value = value_d if value_d != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("E")).value = value_e if value_e != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "A")).value = value_a if value_a != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "C")).value = value_c if value_c != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "D")).value = value_d if value_d != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "E")).value = value_e if value_e != "None" else ""
     format_cell = ws.cell(row=insert_row, column=column_index_from_string("F"))
     format_cell.value = value_f.replace('.', ',') if value_f != "None" else ""
-    format_cell.number_format = numbers.FORMAT_NUMBER
+    format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
     price_cell = ws.cell(row=insert_row, column=column_index_from_string("G"))
     price_cell.value = float(value_g) if value_g != "None" else ""
-    price_cell.number_format = 'R$ #,##0.00'
+    price_cell.number_format = '#,##0.00'
     price_cell.alignment = Alignment(horizontal='center')
-    ws.cell(row=insert_row, column=column_index_from_string("H")).value = value_h if value_h != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("I")).value = value_i if value_i != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("J")).value = value_j if value_j != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("K")).value = value_k if value_k != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("L")).value = value_l if value_l != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("AG")).value = value_ag if value_ag != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("AH")).value = value_ah if value_ah != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("AI")).value = value_ai if value_ai != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("AJ")).value = value_aj if value_aj != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("AK")).value = value_ak if value_ak != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("AL")).value = value_al if value_al != "None" else ""
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("AL"))
+    format_cell = ws.cell(row=insert_row, column=column_index_from_string("H"))
+    format_cell.value = value_h if value_h != "None" else ""
+    format_cell.number_format = '#,##0.00'
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "I")).value = value_i if value_i != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "J")).value = value_j if value_j != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "K")).value = value_k if value_k != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "L")).value = value_l if value_l != "None" else ""
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("AG"))
+    format_cell.value = value_ag if value_ag != "None" else ""
+    format_cell.number_format = '#,##0.00'
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("AH"))
+    format_cell.value = value_ah if value_ah != "None" else ""
+    format_cell.number_format = '#,##0.00'
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("AI"))
+    format_cell.value = value_ai if value_ai != "None" else ""
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("AJ"))
+    format_cell.value = value_aj if value_aj != "None" else ""
+    format_cell.number_format = '#,##0.00'
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("AK"))
+    format_cell.value = value_ak if value_ak != "None" else ""
+    format_cell.number_format = '#,##0.00'
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("AL"))
     format_cell.value = value_al if value_al != "None" else ""
+    format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("AM"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("AM"))
     format_cell.value = value_am if value_am != "None" else ""
+    format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("AQ"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("AQ"))
     format_cell.value = value_aq if value_aq != "None" else ""
     format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("AR"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("AR"))
     format_cell.value = value_ar if value_ar != "None" else ""
+    format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("AV"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("AV"))
     format_cell.value = value_av if value_av != "None" else ""
     format_cell.number_format = numbers.FORMAT_NUMBER
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("AZ"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("AZ"))
     format_cell.value = value_az if value_az != "None" else ""
+    format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BA"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BA"))
     format_cell.value = value_ba if value_ba != "None" else ""
+    format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='right')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BB"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BB"))
     format_cell.value = value_bb if value_bb != "None" else ""
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BC"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BC"))
     format_cell.value = value_bc if value_bc != "None" else ""
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BD"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BD"))
     format_cell.value = value_bd if value_bd != "None" else ""
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BE"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BE"))
     format_cell.value = value_be if value_be != "None" else ""
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BF"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BF"))
     format_cell.value = value_bf if value_bf != "None" else ""
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BG"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BG"))
     format_cell.value = value_bg if value_bg != "None" else ""
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BH"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BH"))
     format_cell.value = value_bh if value_bh != "None" else ""
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BI"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BI"))
     format_cell.value = value_bi if value_bi != "None" else ""
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BJ"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BJ"))
     format_cell.value = value_bj if value_bj != "None" else ""
+    format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BK"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BK"))
     format_cell.value = value_bk if value_bk != "None" else ""
+    format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BL"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BL"))
     format_cell.value = value_bl if value_bl != "None" else ""
+    format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BM"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BM"))
     format_cell.value = value_bm if value_bm != "None" else ""
+    format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("BN"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("BN"))
     format_cell.value = value_bn if value_bn != "None" else ""
+    format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
-    ws.cell(row=insert_row, column=column_index_from_string("CN")).value = value_cn if value_cn != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("CO")).value = value_co if value_co != "None" else ""
-    ws.cell(row=insert_row, column=column_index_from_string("CP")).value = value_cp if value_cp != "None" else ""
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("CQ"))
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "CN")).value = value_cn if value_cn != "None" else ""
+    ws.cell(row=insert_row, column=column_index_from_string(
+        "CO")).value = value_co if value_co != "None" else ""
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("CP"))
+    format_cell.value = value_cp if value_cp != "None" else ""
+    format_cell.number_format = '#,##0.00'
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("CQ"))
     format_cell.value = value_cq if value_cq != "None" else ""
+    format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
-    format_cell = ws.cell(row=insert_row, column=column_index_from_string("CR"))
+    format_cell = ws.cell(
+        row=insert_row, column=column_index_from_string("CR"))
     format_cell.value = value_cr if value_cr != "None" else ""
+    format_cell.number_format = '#,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
 
 
@@ -591,19 +653,20 @@ def organize_sheet_columns(sheet, max_row, bill_dict):
             price_cell.font = font_trebuchet_ms
 
         if 'AW' in bill_dict['quantity']:
-            sheet.cell(row=max_row, column=column_index_from_string(
+            format_cell = sheet.cell(row=max_row, column=column_index_from_string(
                 'AW'), value=bill_dict['quantity']['AW'])
+            format_cell.number_format = '#,##0.00'
 
         if 'AC' in bill_dict['unit_price']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AC'), value=float(bill_dict['unit_price']['AC']))
+                'AC'), value=round(float(bill_dict['unit_price']['AC']), 2))
             price_cell.number_format = 'R$ #,##0.00000'
             price_cell.font = font_trebuchet_ms
             price_cell.alignment = Alignment(horizontal='right')
 
         if 'AB' in bill_dict['unit_price']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AB'), value=float(bill_dict['unit_price']['AB']))
+                'AB'), value=round(float(bill_dict['unit_price']['AB']), 2))
             price_cell.number_format = 'R$ #,##0.00000'
             price_cell.font = font_trebuchet_ms
             price_cell.alignment = Alignment(horizontal='right')
@@ -635,8 +698,9 @@ def organize_sheet_columns(sheet, max_row, bill_dict):
             price_cell.alignment = Alignment(horizontal='right')
 
         if 'AT' in bill_dict['kwh_consumed']:
-            sheet.cell(row=max_row, column=column_index_from_string(
+            format_cell = sheet.cell(row=max_row, column=column_index_from_string(
                 'AT'), value=float(bill_dict['kwh_consumed']['AT']))
+            format_cell.number_format = '#,##0.00'
 
         if 'AS' in bill_dict['kwh_consumed']:
             sheet.cell(row=max_row, column=column_index_from_string(
@@ -689,8 +753,9 @@ def organize_sheet_columns(sheet, max_row, bill_dict):
             price_cell.alignment = Alignment(horizontal='right')
 
         if 'AT' in bill_dict['kwh_consumed']:
-            sheet.cell(row=max_row, column=column_index_from_string(
+            format_cell = sheet.cell(row=max_row, column=column_index_from_string(
                 'AT'), value=float(bill_dict['kwh_consumed']['AT']))
+            format_cell.number_format = '#,##0.00'
 
 
 def last_row_with_value(worksheet, uc, column_index):
