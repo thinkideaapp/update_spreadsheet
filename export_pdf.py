@@ -420,7 +420,7 @@ def duplicate_columns_value(ws, last_row, insert_row):
     price_cell.alignment = Alignment(horizontal='center')
     format_cell = ws.cell(row=insert_row, column=column_index_from_string("H"))
     format_cell.value = value_h if value_h != "None" else ""
-    format_cell.number_format = '#,##0.00'
+    format_cell.number_format = 'R$ #,##0.00'
     ws.cell(row=insert_row, column=column_index_from_string(
         "I")).value = value_i if value_i != "None" else ""
     ws.cell(row=insert_row, column=column_index_from_string(
@@ -490,6 +490,7 @@ def duplicate_columns_value(ws, last_row, insert_row):
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("BC"))
     format_cell.value = value_bc if value_bc != "None" else ""
+    format_cell.number_format = 'R$ #,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("BD"))
@@ -506,6 +507,7 @@ def duplicate_columns_value(ws, last_row, insert_row):
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("BG"))
     format_cell.value = value_bg if value_bg != "None" else ""
+    format_cell.number_format = 'R$ #,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("BH"))
@@ -514,6 +516,7 @@ def duplicate_columns_value(ws, last_row, insert_row):
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("BI"))
     format_cell.value = value_bi if value_bi != "None" else ""
+    format_cell.number_format = 'R$ #,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("BJ"))
