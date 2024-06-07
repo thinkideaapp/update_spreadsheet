@@ -53,6 +53,8 @@ def get_rows_columns(info_dict, bill_group, get_type):
                     "U": info_dict.get("CONTRIB. ILUM. PÚBLICA", 0),
                     "Z": info_dict.get("DEMANDA ULTRAPASSAGEM", 0) + info_dict.get("INDEN. VIOL. PRAZO ATENDIMENTO", 0),
                 }
+                if new_dict['S'] == 0:
+                    new_dict['S'] = info_dict.get("UFER HR", 0)
             except:
                 pass
         elif get_type == "kwh_consumed":
@@ -216,7 +218,7 @@ def get_info_rows(text, get_type, bill_group):
                 info_dict[row.split(' kW')[0]] = value
                 prices_rows.remove(row.split(' kW')[0])
                 continue
-            if row.split(' kVArh')[0] == "UFER FP":
+            if row.split(' kVArh')[0] in ('UFER FP', 'UFER HR'):
                 value = row.split(' ')[-1]
                 row_list.append(value)
                 info_dict[row.split(' kVArh')[0]] = value
@@ -232,10 +234,13 @@ def get_info_rows(text, get_type, bill_group):
             if row.split(' -')[0] in prices_rows:
                 value = re.sub("[a-zA-Z]", "", row.split(" ")[-2])
                 if value == '':
-                    value = re.sub("[a-zA-Z]", "", row.split(" ")[5])
-                row_list.append(value)
-                info_dict[row.split(' -')[0]] = value
-                prices_rows.remove(row.split(' -')[0])
+                    if row.split(" ")[7] not in ('PONTA', 'FORA PONTA',
+                                                 'RESERVADO', 'FORA'):
+                        value = re.sub("[a-zA-Z]", "", row.split(" ")[5])
+                if value:
+                    row_list.append(value)
+                    info_dict[row.split(' -')[0]] = value
+                    prices_rows.remove(row.split(' -')[0])
             if row.split('.')[0] in prices_rows:
                 value = row.split(' ')[-1]
                 row_list.append(value)
@@ -387,10 +392,13 @@ def duplicate_columns_value(ws, last_row, insert_row):
     value_cr = num_default.sub(str(insert_row), value_cr)
 
     try:
-        value_e = datetime.datetime.strptime(value_e, "%Y-%m-%d %H:%M:%S")
-        value_e = value_e.strftime("%d/%m/%Y")
         value_l = datetime.datetime.strptime(value_l, "%Y-%m-%d %H:%M:%S")
         value_l = value_l.strftime("%d/%m/%Y")
+    except:
+        pass
+    try:
+        value_e = datetime.datetime.strptime(value_e, "%Y-%m-%d %H:%M:%S")
+        value_e = value_e.strftime("%d/%m/%Y")
     except:
         pass
 
@@ -408,7 +416,7 @@ def duplicate_columns_value(ws, last_row, insert_row):
     format_cell.alignment = Alignment(horizontal='center')
     price_cell = ws.cell(row=insert_row, column=column_index_from_string("G"))
     price_cell.value = float(value_g) if value_g != "None" else ""
-    price_cell.number_format = '#,##0.00'
+    price_cell.number_format = 'R$ #,##0.00'
     price_cell.alignment = Alignment(horizontal='center')
     format_cell = ws.cell(row=insert_row, column=column_index_from_string("H"))
     format_cell.value = value_h if value_h != "None" else ""
@@ -428,7 +436,7 @@ def duplicate_columns_value(ws, last_row, insert_row):
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("AH"))
     format_cell.value = value_ah if value_ah != "None" else ""
-    format_cell.number_format = '#,##0.00'
+    format_cell.number_format = 'R$ #,##0.00'
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("AI"))
     format_cell.value = value_ai if value_ai != "None" else ""
@@ -448,7 +456,7 @@ def duplicate_columns_value(ws, last_row, insert_row):
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("AM"))
     format_cell.value = value_am if value_am != "None" else ""
-    format_cell.number_format = '#,##0.00'
+    format_cell.number_format = 'R$ #,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("AQ"))
@@ -458,7 +466,7 @@ def duplicate_columns_value(ws, last_row, insert_row):
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("AR"))
     format_cell.value = value_ar if value_ar != "None" else ""
-    format_cell.number_format = '#,##0.00'
+    format_cell.number_format = 'R$ #,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("AV"))
@@ -473,7 +481,7 @@ def duplicate_columns_value(ws, last_row, insert_row):
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("BA"))
     format_cell.value = value_ba if value_ba != "None" else ""
-    format_cell.number_format = '#,##0.00'
+    format_cell.number_format = 'R$ #,##0.00'
     format_cell.alignment = Alignment(horizontal='right')
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("BB"))
@@ -515,7 +523,7 @@ def duplicate_columns_value(ws, last_row, insert_row):
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("BK"))
     format_cell.value = value_bk if value_bk != "None" else ""
-    format_cell.number_format = '#,##0.00'
+    format_cell.number_format = 'R$ #,##0.00'
     format_cell.alignment = Alignment(horizontal='center')
     format_cell = ws.cell(
         row=insert_row, column=column_index_from_string("BL"))
@@ -659,14 +667,14 @@ def organize_sheet_columns(sheet, max_row, bill_dict):
 
         if 'AC' in bill_dict['unit_price']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AC'), value=round(float(bill_dict['unit_price']['AC']), 2))
+                'AC'), value=float(bill_dict['unit_price']['AC']))
             price_cell.number_format = 'R$ #,##0.00000'
             price_cell.font = font_trebuchet_ms
             price_cell.alignment = Alignment(horizontal='right')
 
         if 'AB' in bill_dict['unit_price']:
             price_cell = sheet.cell(row=max_row, column=column_index_from_string(
-                'AB'), value=round(float(bill_dict['unit_price']['AB']), 2))
+                'AB'), value=float(bill_dict['unit_price']['AB']))
             price_cell.number_format = 'R$ #,##0.00000'
             price_cell.font = font_trebuchet_ms
             price_cell.alignment = Alignment(horizontal='right')
